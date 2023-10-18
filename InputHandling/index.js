@@ -9,8 +9,8 @@ let lastTimeStamp = performance.now();
 
 // This is a rectangle model to be displayed on the screen
 let rect = {
-    vel_x: 0.1,
-    vel_y: 0.1,
+    vel_x: 3/8,
+    vel_y: 3/8,
     x: 10,
     y: 10,
     width: 50,
@@ -20,12 +20,20 @@ let rect = {
 
 // processInput is responsible for handling user input
 function processInput(elapsedTime) {
-    for (input in inputBuffer) {
+    for (let input in inputBuffer) {
         if (input === 'w') {
             rect.y -= rect.vel_y * elapsedTime;
         }
+        if (input === 'a') {
+            rect.x -= rect.vel_x * elapsedTime;
+        }
+        if (input === 's') {
+            rect.y += rect.vel_y * elapsedTime;
+        }
+        if (input === 'd') {
+            rect.x += rect.vel_x * elapsedTime;
+        }
     }
-    inputBuffer = {};
 }
 
 // update is responsible for updating the state of game objects (i.e. moving objects, object collision, etc.)
@@ -59,7 +67,10 @@ function gameLoop(time) {
 
 function initialize() {
     window.addEventListener('keydown', function(event) {
-        inputBuffer[event.key] = event.key;
+        inputBuffer[event.key] = event.timeStamp;
+    });
+    window.addEventListener('keyup', function(event) {
+        delete inputBuffer[event.key];
     });
 
     // This just starts the game loop
