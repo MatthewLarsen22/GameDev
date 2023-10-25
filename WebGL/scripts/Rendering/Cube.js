@@ -1,45 +1,61 @@
-MyGame.renderer.Tetrahedron = (function(core) {
+MyGame.renderer.Cube = (function(core) {
     'use strict';
     let that = {
-        // vertices: [
-        //     1, 1, 1, // x, y, z
-        //     1, -1, -1,
-        //     -1, 1, -1,
-        //     -1, -1, 1
-        // ],
-        // indices: [
-        //     0, 2, 1,
-        //     1, 2, 3,
-        //     2, 0, 3,
-        //     0, 1, 3
-        // ],
-        // vertexColors: [
-        //     1.0, 0.0, 0.0, // r, g, b
-        //     0.0, 1.0, 0.0,
-        //     0.0, 0.0, 1.0,
-        //     1.0, 1.0, 0.0
-        // ],
-
         vertices: [
             1, 1, 1, // x, y, z
-            -1, 1, -1,
+            1, 1, -1,
+            1, -1, 1,
             1, -1, -1,
-            1, -1, -1,
+            -1, 1, 1,
             -1, 1, -1,
             -1, -1, 1,
-            -1, 1, -1,
-            1, 1, 1,
-            -1, -1, 1,
-            1, 1, 1,
-            1, -1, -1,
-            -1, -1, 1,
+            -1, -1, -1
         ],
         indices: [
             0, 1, 2,
-            3, 4, 5,
-            6, 7, 8,
-            9, 10, 11
+            1, 3, 2,
+            1, 5, 3,
+            5, 7, 3,
+            5, 4, 7, 
+            4, 6, 7,
+            4, 0, 6,
+            0, 6, 2,
+            0, 4, 1, 
+            4, 5, 1,
+            3, 7, 2,
+            7, 6, 2
         ],
+        vertexColors: [
+            1.0, 0.0, 0.0, // r, g, b
+            0.0, 1.0, 0.0,
+            0.0, 0.0, 1.0,
+            1.0, 1.0, 0.0,
+            1.0, 0.0, 0.0,
+            0.0, 1.0, 0.0,
+            0.0, 0.0, 1.0,
+            1.0, 1.0, 0.0
+        ],
+
+        // vertices: [
+        //     1, 1, 1, // x, y, z
+        //     -1, 1, -1,
+        //     1, -1, -1,
+        //     1, -1, -1,
+        //     -1, 1, -1,
+        //     -1, -1, 1,
+        //     -1, 1, -1,
+        //     1, 1, 1,
+        //     -1, -1, 1,
+        //     1, 1, 1,
+        //     1, -1, -1,
+        //     -1, -1, 1,
+        // ],
+        // indices: [
+        //     0, 1, 2,
+        //     3, 4, 5,
+        //     6, 7, 8,
+        //     9, 10, 11
+        // ],
         // vertexColors: [
         //     1.0, 0.0, 0.0, // r, g, b
         //     1.0, 0.0, 0.0,
@@ -54,20 +70,20 @@ MyGame.renderer.Tetrahedron = (function(core) {
         //     1.0, 1.0, 0.0,
         //     1.0, 1.0, 0.0
         // ],
-        vertexColors: [
-            Math.random(), Math.random(), Math.random(), // r, g, b
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random(),
-            Math.random(), Math.random(), Math.random()
-        ],
+        // vertexColors: [
+        //     Math.random(), Math.random(), Math.random(), // r, g, b
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random(),
+        //     Math.random(), Math.random(), Math.random()
+        // ],
     
         buffers: {
             vertexBuffer: null,

@@ -1,4 +1,4 @@
-MyGame.components.Tetrahedron = function(spec) {
+MyGame.components.Cube = function(spec) {
     'use strict';
     let that = {
         center: spec.center,

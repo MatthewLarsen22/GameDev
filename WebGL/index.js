@@ -45,8 +45,10 @@ let uniformLocations = {
 };
 
 MyGame.renderer.Tetrahedron.initialize(attributeLocations, uniformLocations);
+MyGame.renderer.Cube.initialize(attributeLocations, uniformLocations);
 
 let tetrahedrons = [];
+let cubes = [];
 
 for (let i = 0; i < 5; i++) {
     let size = Math.max(Math.random()/5, 1/32);
@@ -54,7 +56,7 @@ for (let i = 0; i < 5; i++) {
         {
             center: {
                 x: 0.4 * (i % 5) - 0.8,
-                y: 0,
+                y: -0.5,
                 z: 0
             },
             rotation: {
@@ -74,6 +76,32 @@ for (let i = 0; i < 5; i++) {
     tetrahedrons.push(tetrahedronModel);
 }
 
+for (let i = 0; i < 5; i++) {
+    let size = Math.max(Math.random()/5, 1/32);
+    let cubeModel = MyGame.components.Cube(
+        {
+            center: {
+                x: 0.4 * (i % 5) - 0.8,
+                y: 0.5,
+                z: 0
+            },
+            rotation: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            scale: {
+                x: size, // width
+                y: size, // height
+                z: size // depth
+            },
+            speed: 1/(100 * size * size)
+        }
+    );
+
+    cubes.push(cubeModel);
+}
+
 // Get the start time
 let lastTimeStamp = performance.now();
 
@@ -87,6 +115,9 @@ function update(elapsedTime) {
     for (let tetrahedronModel of tetrahedrons) { 
         tetrahedronModel.update(elapsedTime);
     }
+    for (let cubeModel of cubes) { 
+        cubeModel.update(elapsedTime);
+    }
 }
 
 // render is responsible for drawing game objects on the screen
@@ -95,6 +126,9 @@ function render() {
 
     for (let tetrahedronModel of tetrahedrons) {
         MyGame.renderer.Tetrahedron.render(tetrahedronModel);
+    }
+    for (let cubeModel of cubes) {
+        MyGame.renderer.Cube.render(cubeModel);
     }
 }
 
