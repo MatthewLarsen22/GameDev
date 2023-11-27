@@ -74,6 +74,7 @@ MyGame.renderer.Tetrahedron = (function(core) {
             vertexColorBuffer: null,
             indexBuffer: null
         },
+        shaderProgram: null,
         attributeLocations: {
             position: null,
             color: null
@@ -86,20 +87,23 @@ MyGame.renderer.Tetrahedron = (function(core) {
             translation: null
         },
 
-        initialize: function(attributeLocations, uniformLocations) {
-            this.attributeLocations = attributeLocations;
-            this.uniformLocations = uniformLocations;
+        initialize: function(shader) {
+            this.shaderProgram = shader.program;
+            this.attributeLocations = shader.attributeLocations;
+            this.uniformLocations = shader.uniformLocations;
 
             this.buffers.vertexBuffer = core.initBuffer(core.constants.ARRAY_BUFFER, new Float32Array(this.vertices));
             this.buffers.vertexColorBuffer = core.initBuffer(core.constants.ARRAY_BUFFER, new Float32Array(this.vertexColors));
             this.buffers.indexBuffer = core.initBuffer(core.constants.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices));
 
-            core.attachAttributeToBuffer(this.attributeLocations.position, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
-            core.attachAttributeToBuffer(this.attributeLocations.color, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.position, 3, false, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.color, 3, false, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
         },
         render: function(model) {
-            core.attachAttributeToBuffer(this.attributeLocations.position, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
-            core.attachAttributeToBuffer(this.attributeLocations.color, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
+            core.useProgram(this.shaderProgram);
+
+            core.attachAttributeToBuffer(this.attributeLocations.position, 3, false, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.color, 3, false, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
 
             let matrices = model.getUniformMatrices();
 

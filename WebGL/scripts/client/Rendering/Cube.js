@@ -2,74 +2,35 @@ MyGame.renderer.Cube = (function(core) {
     'use strict';
     let that = {
         vertices: [
-            1, 1, 1, // x, y, z
+            -1, 1, -1, // x, y, z
             1, 1, -1,
-            1, -1, 1,
+            -1, -1, -1,
             1, -1, -1,
             -1, 1, 1,
-            -1, 1, -1,
+            1, 1, 1,
             -1, -1, 1,
-            -1, -1, -1
+            1, -1, 1
         ],
         indices: [
-            0, 1, 2,
-            1, 3, 2,
-            1, 5, 3,
-            5, 7, 3,
-            5, 4, 7, 
-            4, 6, 7,
-            4, 0, 6,
+            // TOP FACE
+            5, 4, 0,
+            5, 0, 1,
+            // LEFT FACE
+            0, 4, 6, 
             0, 6, 2,
-            0, 4, 1, 
-            4, 5, 1,
-            3, 7, 2,
-            7, 6, 2
+            // FRONT FACE
+            1, 0, 2,
+            1, 2, 3,
+            // RIGHT FACE
+            5, 1, 3,
+            5, 3, 7,
+            // BACK FACE
+            4, 5, 7,
+            4, 7, 6,
+            // BOTTOM FACE
+            3, 2, 6,
+            3, 6, 7
         ],
-        vertexColors: [
-            1.0, 0.0, 0.0, // r, g, b
-            0.0, 1.0, 0.0,
-            0.0, 0.0, 1.0,
-            1.0, 1.0, 0.0,
-            1.0, 0.0, 0.0,
-            0.0, 1.0, 0.0,
-            0.0, 0.0, 1.0,
-            1.0, 1.0, 0.0
-        ],
-
-        // vertices: [
-        //     1, 1, 1, // x, y, z
-        //     -1, 1, -1,
-        //     1, -1, -1,
-        //     1, -1, -1,
-        //     -1, 1, -1,
-        //     -1, -1, 1,
-        //     -1, 1, -1,
-        //     1, 1, 1,
-        //     -1, -1, 1,
-        //     1, 1, 1,
-        //     1, -1, -1,
-        //     -1, -1, 1,
-        // ],
-        // indices: [
-        //     0, 1, 2,
-        //     3, 4, 5,
-        //     6, 7, 8,
-        //     9, 10, 11
-        // ],
-        // vertexColors: [
-        //     1.0, 0.0, 0.0, // r, g, b
-        //     1.0, 0.0, 0.0,
-        //     1.0, 0.0, 0.0,
-        //     0.0, 1.0, 0.0,
-        //     0.0, 1.0, 0.0,
-        //     0.0, 1.0, 0.0,
-        //     0.0, 0.0, 1.0,
-        //     0.0, 0.0, 1.0,
-        //     0.0, 0.0, 1.0,
-        //     1.0, 1.0, 0.0,
-        //     1.0, 1.0, 0.0,
-        //     1.0, 1.0, 0.0
-        // ],
         // vertexColors: [
         //     Math.random(), Math.random(), Math.random(), // r, g, b
         //     Math.random(), Math.random(), Math.random(),
@@ -84,12 +45,23 @@ MyGame.renderer.Cube = (function(core) {
         //     Math.random(), Math.random(), Math.random(),
         //     Math.random(), Math.random(), Math.random()
         // ],
+        vertexColors: [
+            1, 0, 0, // r, g, b
+            0, 1, 0,
+            0, 0, 1,
+            1, 1, 0,
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            1, 1, 0
+        ],
     
         buffers: {
             vertexBuffer: null,
             vertexColorBuffer: null,
             indexBuffer: null
         },
+        shaderProgram: null,
         attributeLocations: {
             position: null,
             color: null
@@ -102,20 +74,23 @@ MyGame.renderer.Cube = (function(core) {
             translation: null
         },
 
-        initialize: function(attributeLocations, uniformLocations) {
-            this.attributeLocations = attributeLocations;
-            this.uniformLocations = uniformLocations;
+        initialize: function(shader) {
+            this.shaderProgram = shader.program;
+            this.attributeLocations = shader.attributeLocations;
+            this.uniformLocations = shader.uniformLocations;
 
             this.buffers.vertexBuffer = core.initBuffer(core.constants.ARRAY_BUFFER, new Float32Array(this.vertices));
             this.buffers.vertexColorBuffer = core.initBuffer(core.constants.ARRAY_BUFFER, new Float32Array(this.vertexColors));
             this.buffers.indexBuffer = core.initBuffer(core.constants.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices));
 
-            core.attachAttributeToBuffer(this.attributeLocations.position, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
-            core.attachAttributeToBuffer(this.attributeLocations.color, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.position, 3, false, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.color, 3, false, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
         },
         render: function(model) {
-            core.attachAttributeToBuffer(this.attributeLocations.position, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
-            core.attachAttributeToBuffer(this.attributeLocations.color, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
+            core.useProgram(this.shaderProgram);
+
+            core.attachAttributeToBuffer(this.attributeLocations.position, 3, false, this.buffers.vertexBuffer, core.constants.ARRAY_BUFFER);
+            core.attachAttributeToBuffer(this.attributeLocations.color, 3, false, this.buffers.vertexColorBuffer, core.constants.ARRAY_BUFFER);
 
             let matrices = model.getUniformMatrices();
 

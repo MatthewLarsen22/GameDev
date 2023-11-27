@@ -35,9 +35,9 @@ MyGame.renderer.core = (function() {
         return buffer;
     };
 
-    function attachAttributeToBuffer(attributeLocation, buffer, bufferType) {
+    function attachAttributeToBuffer(attributeLocation, size, normalize, buffer, bufferType) {
         gl.bindBuffer(bufferType, buffer); // Bind to the vertex buffer object
-        gl.vertexAttribPointer(attributeLocation, 3, gl.FLOAT, false, 0, 0); // point an attribute to the currently bound VBO
+        gl.vertexAttribPointer(attributeLocation, size, gl.FLOAT, normalize, 0, 0); // point an attribute to the currently bound VBO
         gl.enableVertexAttribArray(attributeLocation); // Enable the attribute
         gl.bindBuffer(bufferType, null); // Unbind the buffer
     };
@@ -48,6 +48,7 @@ MyGame.renderer.core = (function() {
 
     function renderElement(obj){
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.buffers.indexBuffer);
+        // gl.drawArrays(gl.LINE_STRIP, 0, obj.indices.length);
         gl.drawElements(gl.TRIANGLES, obj.indices.length, gl.UNSIGNED_SHORT, 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
@@ -71,6 +72,31 @@ MyGame.renderer.core = (function() {
         gl.viewport(0,0,canvas.width,canvas.height);
     }
 
+    function useProgram(program) {
+        gl.useProgram(program);
+    }
+
+    function createTexture(image) {
+        // Create a texture.
+        let texture = gl.createTexture();
+
+        // use texture unit 0
+        gl.activeTexture(gl.TEXTURE0 + 0);
+
+        // bind to the TEXTURE_2D bind point of texture unit 0
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
+
+        // Copy the image to the texture
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.generateMipmap(gl.TEXTURE_2D);
+
+        return texture;
+    }
+
     return {
         constants: {
             ARRAY_BUFFER: gl.ARRAY_BUFFER,
@@ -83,6 +109,8 @@ MyGame.renderer.core = (function() {
         clearBackground: clearBackground,
         renderElement: renderElement,
         getAttributeLocation: getAttributeLocation,
-        getUniformLocation: getUniformLocation
+        getUniformLocation: getUniformLocation,
+        useProgram: useProgram,
+        createTexture: createTexture
     };
 }());
